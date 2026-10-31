@@ -74,6 +74,25 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   measured output.
   Part of #2644.
 
+- `xerj autoindex --skills` finds the folders agents keep installed skills
+  in (`.claude/skills`, `.codex/skills` and `.agents/skills` in the home
+  directory, and `.claude/skills` in the current folder), skips the ones that
+  do not exist, and indexes each under its own prefix below one stem
+  (`skills-claude`, `skills-codex`, `skills-agents`, `skills-project`; pick
+  the stem with `--prefix`). `xerj search --prefix skills "<what you want to
+  do>"` searches them all, and when the hits come from several folders each
+  prints its full path. `--watch` watches every folder. One prefix still owns
+  one folder. `xerj init` writes teaching files version 8, which name
+  `--skills`, and the recipe `docs/recipes/find-a-skill.md` uses it. Part of
+  #2644.
+
+- `bash scripts/bench/skills-intent.sh` is the eval #2644 asks for: it installs
+  388 skills from a pinned MIT library into a throwaway home, runs
+  `xerj autoindex --skills`, and ranks the right skill for 26 labelled task
+  queries written blind. On 2026-10-31 the right skill was first for 13 and in
+  the top 3 for 22; every rank, misses included, is in
+  `benchmarks/skills-intent/results/`. Part of #2644.
+
 ### Fixed
 
 - Re-indexing the same doc ids no longer grows `hnsw/graph.bin` without
