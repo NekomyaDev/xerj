@@ -97,6 +97,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   longer take a node from below the watermark into the parent breaker band and
   turn ingest into HTTP 429s. The relief for a search node resting between the
   merge-pool ceiling and the watermark is kept (#2427).
+- `xerj autoindex` no longer stalls for up to 10 minutes per large dataset in
+  `finalize-count`. The dataset time range was read with `min`/`max`
+  aggregations, which make the node copy every document first; on a
+  393 k-record dataset that priced at 768 MB against the 512 MB
+  `limits.max_query_memory_mb` default and the client re-asked for its full
+  600 s patience. The bounds now come from two sorted size-1 searches, and a
+  429 from the per-query memory guard is no longer retried, since the same
+  query is refused again (#2427).
 - The `xerj-autoindex` corpus-lock tests no longer fail at random in CI
   (#2520, Refs #2427). One test put `-c core.fsmonitor=false` after the git
   subcommand, so git exited 129 at once and the test only passed by winning a
