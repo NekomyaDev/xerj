@@ -61,6 +61,19 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   existing index gains the fields as each skill changes, or all at once with
   `xerj autoindex --fresh`. Part of #2644.
 
+- `xerj init` teaches agents to find an installed skill by task: index the
+  skills folder once with `xerj autoindex <skills folder> --prefix skills`, then
+  run `xerj search --prefix skills "<what you want to do>"`. The generated
+  `SKILL.md` and the `AGENTS.md` section it writes both say so, and say the
+  match is on words, not meaning. The init files version moves to 7, so a
+  re-run upgrades a `SKILL.md` (and `.cursor/rules/xerj.mdc`) that an earlier
+  init stamped and nobody edited. An existing `AGENTS.md` that already mentions
+  `xerj search` or `xerj def`, which includes every one an earlier init wrote,
+  is kept as it is, so only an `AGENTS.md` without XERJ text gets the new
+  lines. A new recipe, `docs/recipes/find-a-skill.md`, walks the loop with
+  measured output.
+  Part of #2644.
+
 ### Fixed
 
 - The version map takes about 23% less memory per document (#2427). A
