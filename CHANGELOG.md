@@ -82,6 +82,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   separate 48 B heap allocation, other ids up to 24 bytes are stored inline,
   and the tombstone flag shares the version word. On the 2.46 M-entry perf-gate
   corpus the map drops from about 347 MB to 268 MB.
+- A `_delete_by_query` whose matches fit in one scroll page no longer flushes
+  the whole memtable before deleting. `autoindex --fresh` sends one such
+  delete-before-replace per file, and each one used to cut a new tiny segment
+  out of every other worker's pending bulks (about 1,050 segments on the
+  #2640 corpus). Larger deletes keep the flush-then-page path (#2640).
 - A search no longer hangs forever when a cold segment's stored fields are
   being warmed in the background. A search-pool thread that waited for the
   warm's decode could block the decode it waited for, so every later search
